@@ -1,10 +1,12 @@
 # devops-portfolio
 
-Серьёзные DevOps-проекты Василя Илембетова: инфраструктура как код, CI/CD, контейнеры, Kubernetes и наблюдаемость.
+Практические работы по DevOps: автоматизация развёртывания, инфраструктура как код, CI/CD, контейнеры, оркестрация и мониторинг. Автор: Василь Илембетов.
 
 English version: [README.en.md](README.en.md).
 
-Учебные домашние задания курса Нетологии лежат отдельно, в репозитории [Homeworks](https://github.com/Ilembet/Homeworks). Это учебный архив, он здесь не дублируется.
+**Стек:** Linux, Docker и Docker Compose, GitHub Actions, Terraform и Yandex Cloud, Ansible, Kubernetes, Prometheus и Grafana (часть пунктов в плане, см. ниже).
+
+Учебные задания курса Нетологии хранятся отдельно, в репозитории [Homeworks](https://github.com/Ilembet/Homeworks).
 
 ## Правила репозитория
 
