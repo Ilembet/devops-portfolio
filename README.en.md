@@ -1,10 +1,12 @@
 # devops-portfolio
 
-Serious DevOps projects by Vasil Ilembetov: infrastructure as code, CI/CD, containers, Kubernetes and observability.
+Hands-on DevOps work: deployment automation, infrastructure as code, CI/CD, containers, orchestration and monitoring. Author: Vasil Ilembetov.
 
 Русская версия: [README.md](README.md).
 
-Coursework from the Netology DevOps program lives in a separate repository, [Homeworks](https://github.com/Ilembet/Homeworks). It is a learning archive and is not duplicated here.
+**Stack:** Linux, Docker and Docker Compose, GitHub Actions, Terraform and Yandex Cloud, Ansible, Kubernetes, Prometheus and Grafana (some items are still planned, see below).
+
+Coursework from the Netology program is kept separately in the [Homeworks](https://github.com/Ilembet/Homeworks) repository.
 
 ## Repository rules
 
