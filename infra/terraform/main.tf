@@ -51,6 +51,7 @@ resource "yandex_compute_instance" "vm" {
   for_each = yandex_vpc_subnet.zone
 
   name        = "${var.name_prefix}-${each.key}"
+  hostname    = "${var.name_prefix}-${each.key}"
   zone        = each.key
   platform_id = "standard-v3"
 
