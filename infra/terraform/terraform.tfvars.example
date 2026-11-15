@@ -1,0 +1,8 @@
+# Copy to terraform.tfvars and adjust. terraform.tfvars is never committed.
+# Скопируй в terraform.tfvars и поправь. terraform.tfvars в git не попадает.
+
+# Your public IP: curl -s ifconfig.me ; then put "<ip>/32" here.
+# Свой публичный IP: curl -s ifconfig.me ; затем впиши "<ip>/32".
+allowed_cidr = "0.0.0.0/0"
+
+ssh_public_key_path = "~/.ssh/id_ed25519.pub"
