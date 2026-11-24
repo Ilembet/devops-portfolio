@@ -48,6 +48,10 @@ python -m pytest
 - the API starts after the database passes its healthcheck;
 - passwords come only from `.env`, with no defaults.
 
+## Build and deploy
+
+After every merge to `main`, CI runs the tests, builds the image and publishes it to GHCR (`ghcr.io/ilembet/notes-api`) and to Yandex Container Registry. VMs from `infra/terraform` pull the image from the Yandex registry on first boot and start the service with `deploy/docker-compose.yml`.
+
 ## Next
 
-Build the image in CI, publish it to GHCR, deploy to a VM in Yandex Cloud, then Kubernetes and monitoring.
+Kubernetes and monitoring.
