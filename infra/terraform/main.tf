@@ -79,7 +79,11 @@ resource "yandex_compute_instance" "vm" {
     preemptible = var.preemptible
   }
 
+  # First boot: create the ubuntu user, install Docker, start notes-api from GHCR
   metadata = {
-    ssh-keys = "ubuntu:${local.ssh_key}"
+    user-data = templatefile("${path.module}/cloud-init.yaml.tftpl", {
+      ssh_key     = local.ssh_key
+      compose_b64 = base64encode(file("${path.module}/../../projects/notes-api/deploy/docker-compose.yml"))
+    })
   }
 }

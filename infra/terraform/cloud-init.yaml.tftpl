@@ -1,0 +1,30 @@
+#cloud-config
+users:
+  - name: ubuntu
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${ssh_key}
+
+package_update: true
+packages:
+  - docker.io
+  - docker-compose-v2
+
+write_files:
+  - path: /opt/notes-api/docker-compose.yml
+    permissions: "0644"
+    encoding: b64
+    content: ${compose_b64}
+
+runcmd:
+  - usermod -aG docker ubuntu
+  - systemctl enable --now docker
+  - |
+    cd /opt/notes-api
+    if [ ! -f .env ]; then
+      umask 077
+      printf 'POSTGRES_USER=app\nPOSTGRES_PASSWORD=%s\nPOSTGRES_DB=notes\n' "$(openssl rand -hex 16)" > .env
+    fi
+    docker compose pull
+    docker compose up -d
