@@ -1,0 +1,33 @@
+#cloud-config
+users:
+  - name: ubuntu
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${ssh_key}
+
+package_update: true
+packages:
+  - docker.io
+  - docker-compose-v2
+
+write_files:
+  - path: /opt/notes-api/docker-compose.yml
+    permissions: "0644"
+    encoding: b64
+    content: ${compose_b64}
+
+runcmd:
+  - usermod -aG docker ubuntu
+  - systemctl enable --now docker
+  - |
+    cd /opt/notes-api
+    if [ ! -f .env ]; then
+      umask 077
+      printf 'REGISTRY=%s\nPOSTGRES_USER=app\nPOSTGRES_PASSWORD=%s\nPOSTGRES_DB=notes\n' "${registry}" "$(openssl rand -hex 16)" > .env
+    fi
+    # Short-lived IAM token of the VM service account (vm-puller) from the metadata service
+    TOKEN="$(curl -sf -H Metadata-Flavor:Google http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token | python3 -c 'import json,sys; print(json.load(sys.stdin)["access_token"])')"
+    echo "$TOKEN" | docker login --username iam --password-stdin cr.yandex
+    for attempt in 1 2 3 4 5; do docker compose pull && break; echo "pull failed, retry $attempt"; sleep 10; done
+    docker compose up -d

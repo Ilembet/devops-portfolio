@@ -7,6 +7,15 @@ data "yandex_compute_image" "ubuntu" {
   family = "ubuntu-2404-lts"
 }
 
+# Long-lived resources created once outside this stack (see README)
+data "yandex_container_registry" "main" {
+  name = "portfolio"
+}
+
+data "yandex_iam_service_account" "vm" {
+  name = "vm-puller"
+}
+
 resource "yandex_vpc_network" "main" {
   name = "portfolio-net"
 }
@@ -50,10 +59,11 @@ resource "yandex_vpc_security_group" "vm" {
 resource "yandex_compute_instance" "vm" {
   for_each = yandex_vpc_subnet.zone
 
-  name        = "${var.name_prefix}-${each.key}"
-  hostname    = "${var.name_prefix}-${each.key}"
-  zone        = each.key
-  platform_id = "standard-v3"
+  name               = "${var.name_prefix}-${each.key}"
+  hostname           = "${var.name_prefix}-${each.key}"
+  zone               = each.key
+  platform_id        = "standard-v3"
+  service_account_id = data.yandex_iam_service_account.vm.id
 
   resources {
     cores         = var.vm_cores
@@ -79,7 +89,12 @@ resource "yandex_compute_instance" "vm" {
     preemptible = var.preemptible
   }
 
+  # First boot: create the ubuntu user, install Docker, start notes-api from GHCR
   metadata = {
-    ssh-keys = "ubuntu:${local.ssh_key}"
+    user-data = templatefile("${path.module}/cloud-init.yaml.tftpl", {
+      registry    = "cr.yandex/${data.yandex_container_registry.main.id}"
+      ssh_key     = local.ssh_key
+      compose_b64 = base64encode(file("${path.module}/../../projects/notes-api/deploy/docker-compose.yml"))
+    })
   }
 }
