@@ -83,5 +83,11 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          # Yandex Container Registry does not accept attestation manifests
+          provenance: false
+          sbom: false
       - name: Mirror PostgreSQL image to Yandex Container Registry
-        run: docker buildx imagetools create --tag "$YC_REGISTRY/postgres:16-alpine" postgres:16-alpine
+        run: |
+          docker pull --platform linux/amd64 postgres:16-alpine
+          docker tag postgres:16-alpine "$YC_REGISTRY/postgres:16-alpine"
+          docker push "$YC_REGISTRY/postgres:16-alpine"
