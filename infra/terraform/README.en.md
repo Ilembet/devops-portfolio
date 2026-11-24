@@ -17,6 +17,7 @@ Two Ubuntu 24.04 virtual machines in Yandex Cloud, in different availability zon
 
 - Access goes through the `terraform-sa` service account with the `editor` role on a dedicated `portfolio` folder. The token is short-lived (up to 12 hours); no keys are stored on disk.
 - The `portfolio` folder is separate from coursework resources, so `terraform destroy` cannot touch anything else.
+- State is stored in the `tfstate-ilembet-portfolio` Object Storage bucket with versioning. The bucket access key lives outside the repository in `~/.config/portfolio/s3.env` and is loaded by `env.sh`.
 - VMs are preemptible, 20% vCPU, HDD: the lowest cost for a lab environment.
 - One VM per zone listed in `zones`: adding a zone means adding one line.
 
@@ -43,4 +44,4 @@ terraform destroy
 
 ## Next
 
-Remote state in Object Storage, modules, deploying notes-api to the VMs with Ansible.
+State locking with YDB, modules, deploying notes-api to the VMs with Ansible.
