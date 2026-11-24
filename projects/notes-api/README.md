@@ -48,6 +48,10 @@ python -m pytest
 - API стартует после того, как база прошла healthcheck;
 - пароли только из `.env`, без значений по умолчанию.
 
+## Сборка и деплой
+
+После каждого слияния в `main` CI прогоняет тесты, собирает образ и публикует его в GHCR (`ghcr.io/ilembet/notes-api`) и в Yandex Container Registry. ВМ из `infra/terraform` при первой загрузке скачивают образ из реестра Yandex и запускают сервис по `deploy/docker-compose.yml`.
+
 ## Дальше по плану
 
-Сборка образа в CI, публикация в GHCR, деплой на ВМ в Yandex Cloud, затем Kubernetes и мониторинг.
+Kubernetes и мониторинг.
